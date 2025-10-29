@@ -2,13 +2,12 @@ import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import ToDoInfo from "./ToDoInfo";
 import ToDoList from "./ToDoList";
-import { useState } from "react";
+import {useState} from "react";
 
-const Todo = () =>
-{
+const Todo = () => {
 
-  const list = [{id: 'task-1', title: 'Трахать сук', isDone: false },
-    {id: 'task-2', title: 'Пить сок', isDone: false }
+  const list = [{id: 'task-1', title: 'Трахать сук', isDone: false},
+    {id: 'task-2', title: 'Пить сок', isDone: false}
   ];
 
   const [tasks, setTasks] = useState(list);
@@ -19,6 +18,10 @@ const Todo = () =>
   }
 
 
+  const tempTasks = [
+    {id: 'task-1', title: 'Трахать сук', isDone: false},
+    {id: 'task-2', title: 'Пить сок', isDone: true}
+  ]
 
 
   return (
@@ -28,8 +31,11 @@ const Todo = () =>
         addTask={addTask}
       />
       <SearchTaskForm />
-      <ToDoInfo />
-      <ToDoList />
+      <ToDoInfo
+        total={tempTasks.length}
+        done={tempTasks.filter(({isDone}) => isDone).length}
+      />
+      <ToDoList tasks={tempTasks} />
     </div>
   )
 }
