@@ -7,9 +7,20 @@ const AddTaskForm = (props) => {
     addTask
   } = props
 
+  // Браузер при отправке формы перезагружает страницу чтобы этого избежать делаем свой onSubmit c preventDefault чтобы страница не перезагружалась
+
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    addTask()
+  }
+
   return (
     <>
-      <form className="todo__form">
+      <form
+        className="todo__form"
+        onSubmit={onSubmit}
+      >
         <Field
           className="todo__field"
           label="New task title"
