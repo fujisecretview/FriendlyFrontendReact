@@ -7,27 +7,40 @@ import {useEffect, useState} from "react";
 const Todo = () => {
 
   const list = [{id: 'task-1', title: 'Трахать сук', isDone: false},
-    {id: 'task-2', title: 'Пить сок', isDone: false}
+    {id: 'task-2', title: 'Пить сок', isDone: true}
   ];
 
-  const [tasks, setTasks] = useState(list);
+  // Тут хранятся таски и начальное значение
+
+  const [tasks, setTasks] = useState([{id: 'task-1', title: 'Трахать сук', isDone: false},
+    {id: 'task-2', title: 'Пить сок', isDone: true}
+  ]);
+
+  // Тут хранится таски которые добавит пользователь
+
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   // Логика работы дочерних компонентов прописывается в родительском
 
+  // В функции addTask с начала проверка на пустые строки и длинну, далее мы генерим айдишник и тут есть ньюанс в ввиде того что если в старом браузере нету crypto то сработает точно Date.now
+
   const addTask = () => {
-    console.log('Task added');
+    if (newTaskTitle.trim().length > 0) {
+      const newTask = {
+        id: crypto?.randomUUID() ?? Date.now().toString(),
+        title: newTaskTitle,
+        isDone: false,
+      }
+
+      setTasks([...tasks, newTask]);
+      setNewTaskTitle('');
+    }
   }
 
   const deleteTask = (TaskId) => {
     console.log(`Task removed with id ${TaskId}`);
   }
 
-
-  const tempTasks = [
-    {id: 'task-1', title: 'Трахать сук', isDone: false},
-    {id: 'task-2', title: 'Пить сок', isDone: true}
-  ]
 
   const deleteAllTasks = () => {
     console.log('Удалены все задачи!')
@@ -45,17 +58,23 @@ const Todo = () => {
   return (
     <div className="todo">
       <h1 className="todo__title">To Do List</h1>
+
       <AddTaskForm
         addTask={addTask}
+        newTaskTitle={newTaskTitle}
+        setNewTaskTitle={setNewTaskTitle}
       />
+
       <SearchTaskForm onSearchInput={filterTasks} />
+
       <ToDoInfo
-        total={tempTasks.length}
-        done={tempTasks.filter(({isDone}) => isDone).length}
+        total={tasks.length}
+        done={tasks.filter(({isDone}) => isDone).length}
         onDeleteAllButtonClick={deleteAllTasks}
       />
+
       <ToDoList
-        tasks={tempTasks}
+        tasks={tasks}
         onDeleteTaskButtonClick={deleteTask}
         onTaskCompleteChange={toogleTaskComplete}
       />
