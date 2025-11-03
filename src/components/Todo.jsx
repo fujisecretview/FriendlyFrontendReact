@@ -25,16 +25,9 @@ const Todo = () => {
   // В функции addTask с начала проверка на пустые строки и длинну, далее мы генерим айдишник и тут есть ньюанс в ввиде того что если в старом браузере нету crypto то сработает точно Date.now
 
   const addTask = () => {
-    if (newTaskTitle.trim().length > 0) {
-      const newTask = {
-        id: crypto?.randomUUID() ?? Date.now().toString(),
-        title: newTaskTitle,
-        isDone: false,
-      }
-
-      setTasks([...tasks, newTask]);
-      setNewTaskTitle('');
-    }
+    setTasks(
+      [...tasks, newTaskTitle]
+    );
   }
 
   const deleteTask = (TaskId) => {
