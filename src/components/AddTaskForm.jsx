@@ -15,6 +15,7 @@ const AddTaskForm = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     addTask()
+
   }
 
   return (

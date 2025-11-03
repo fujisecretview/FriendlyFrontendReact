@@ -6,13 +6,14 @@ import {useEffect, useState} from "react";
 
 const Todo = () => {
 
-  const list = [{id: 'task-1', title: 'Трахать сук', isDone: false},
-    {id: 'task-2', title: 'Пить сок', isDone: true}
-  ];
 
   // Тут хранятся таски и начальное значение
 
-  const [tasks, setTasks] = useState([{id: 'task-1', title: 'Трахать сук', isDone: false},
+  const [tasks, setTasks] = useState([{
+    id: 'task-1',
+    title: 'Трахать сук',
+    isDone: false
+  },
     {id: 'task-2', title: 'Пить сок', isDone: true}
   ]);
 
@@ -25,22 +26,47 @@ const Todo = () => {
   // В функции addTask с начала проверка на пустые строки и длинну, далее мы генерим айдишник и тут есть ньюанс в ввиде того что если в старом браузере нету crypto то сработает точно Date.now
 
   const addTask = () => {
-    setTasks(
-      [...tasks, newTaskTitle]
-    );
+    if (newTaskTitle.trim().length > 0) {
+      const newTask = {
+        id: crypto?.UUID ?? Date.now().toString(),
+        title: newTaskTitle,
+        isDone: false
+      }
+      setTasks(
+        [...tasks, newTask]
+      )
+      setNewTaskTitle('');
+    }
   }
 
-  const deleteTask = (TaskId) => {
-    console.log(`Task removed with id ${TaskId}`);
+  // реакт сам перерисовывает если видит что масив изменился, так же метод фильтер возвращает новый массив по этому тут остается иммутабельность
+
+  const deleteTask = (taskId) => {
+    setTasks(
+      tasks.filter(task => task.id !== taskId)
+    );
   }
 
 
   const deleteAllTasks = () => {
-    console.log('Удалены все задачи!')
+    const isConfirmed = confirm('Wana delete all tasks?')
+
+    if (isConfirmed) {
+      setTasks(
+        []
+      )
+    }
   }
 
   const toogleTaskComplete = (taskId, isDone) => {
-    console.log(`Задача ${taskId} ${isDone ? 'Выполнена' : 'Соси писун'}`)
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === taskId) {
+          return {...task, isDone};
+        }
+        return task;
+      })
+    );
   }
 
   const filterTasks = (query) => {
