@@ -73,6 +73,23 @@ const Todo = () => {
     console.log(`Поиск: ${query}`);
   }
 
+  // А тут я смотрю есть ли данные в локалке и если да то вывожу их на екран
+
+  useEffect(() => {
+    console.log('Компонент Todo смонтирован, загружаем данные из хранилища')
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks));
+    }
+  }, [])
+
+  // тут я буду сохранять в локалку
+
+  useEffect(() => {
+    console.log('Сохраняем и выводим при каждом изменении Tasks')
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks])
+
 
   return (
     <div className="todo">
