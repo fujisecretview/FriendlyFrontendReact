@@ -7,19 +7,45 @@ import {useEffect, useState} from "react";
 const Todo = () => {
 
 
-  // Тут хранятся таски и начальное значение
-
-  const [tasks, setTasks] = useState([{
+  const initialTasks = [{
     id: 'task-1',
     title: 'Трахать сук',
     isDone: false
   },
-    {id: 'task-2', title: 'Пить сок', isDone: true}
-  ]);
+    {
+      id: 'task-2',
+      title: 'Пить сок',
+      isDone: true
+    },
+  ]
+
+  // Тут хранятся таски и начальное значение
+
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks')
+
+    if (savedTasks) {
+      return JSON.parse(savedTasks)
+    }
+
+    return [{
+      id: 'task-1',
+      title: 'Трахать сук',
+      isDone: false
+    },
+      {
+        id: 'task-2',
+        title: 'Пить сок',
+        isDone: true
+      },
+    ]
+  })
+
 
   // Тут хранится таски которые добавит пользователь
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Логика работы дочерних компонентов прописывается в родительском
 
@@ -36,6 +62,7 @@ const Todo = () => {
         [...tasks, newTask]
       )
       setNewTaskTitle('');
+      setSearchQuery('');
     }
   }
 
@@ -52,6 +79,7 @@ const Todo = () => {
     const isConfirmed = confirm('Wana delete all tasks?')
 
     if (isConfirmed) {
+      localStorage.removeItem('tasks')
       setTasks(
         []
       )
@@ -75,20 +103,24 @@ const Todo = () => {
 
   // А тут я смотрю есть ли данные в локалке и если да то вывожу их на екран
 
-  useEffect(() => {
-    console.log('Компонент Todo смонтирован, загружаем данные из хранилища')
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
-  }, [])
+  // useEffect(() => {
+  //   console.log('Компонент Todo смонтирован, загружаем данные из хранилища')
+  //   const savedTasks = localStorage.getItem('tasks');
+  //   if (savedTasks) {
+  //     setTasks(JSON.parse(savedTasks));
+  //   }
+  // }, [])
 
   // тут я буду сохранять в локалку
 
   useEffect(() => {
-    console.log('Сохраняем и выводим при каждом изменении Tasks')
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks])
+
+  const clearSearchQuery = searchQuery.trim().toLowerCase()
+  const filteredTasks = clearSearchQuery.length > 0
+    ? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
+    : null
 
 
   return (
@@ -101,7 +133,11 @@ const Todo = () => {
         setNewTaskTitle={setNewTaskTitle}
       />
 
-      <SearchTaskForm onSearchInput={filterTasks} />
+      <SearchTaskForm
+        onSearchInput={filterTasks}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       <ToDoInfo
         total={tasks.length}
@@ -113,6 +149,7 @@ const Todo = () => {
         tasks={tasks}
         onDeleteTaskButtonClick={deleteTask}
         onTaskCompleteChange={toogleTaskComplete}
+        filteredTasks={filteredTasks}
       />
     </div>
   )
