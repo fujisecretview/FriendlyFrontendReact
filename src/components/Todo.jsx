@@ -2,7 +2,7 @@ import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import ToDoInfo from "./ToDoInfo";
 import ToDoList from "./ToDoList";
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef,} from "react";
 
 const Todo = () => {
 
@@ -42,10 +42,11 @@ const Todo = () => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks])
 
-  const clearSearchQuery = searchQuery.trim().toLowerCase()
-  const filteredTasks = clearSearchQuery.length > 0
-    ? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
-    : null
+  useEffect(() => {
+    newTaskInputRef.current.focus()
+  })
+
+
 
   const newTaskInputRef = useRef(null);
 
@@ -67,6 +68,7 @@ const Todo = () => {
       )
       setNewTaskTitle('');
       setSearchQuery('');
+      newTaskInputRef.current.focus();
     }
   }
 
@@ -105,6 +107,13 @@ const Todo = () => {
     console.log(`Поиск: ${query}`);
   }
 
+  // Вывожу поиск по title
+
+  const clearSearchQuery = searchQuery.trim().toLowerCase()
+  const filteredTasks = clearSearchQuery.length > 0
+    ? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
+    : null
+
   // А тут я смотрю есть ли данные в локалке и если да то вывожу их на екран
 
   // useEffect(() => {
@@ -126,6 +135,7 @@ const Todo = () => {
         addTask={addTask}
         newTaskTitle={newTaskTitle}
         setNewTaskTitle={setNewTaskTitle}
+        newTaskInputRef={newTaskInputRef}
       />
 
       <SearchTaskForm

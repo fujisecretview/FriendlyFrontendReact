@@ -7,6 +7,7 @@ const Field = (props) => {
     type = 'text',
     value,
     onInput,
+    ref,
   } = props
 
   // все эти пропсы будут менять атрибуты чтобы переиспользовать компонент
@@ -27,6 +28,7 @@ const Field = (props) => {
           id={id}
           placeholder=" "
           autoComplete="off"
+          ref={ref}
           type={type}
           value={value}
           onInput={onInput}

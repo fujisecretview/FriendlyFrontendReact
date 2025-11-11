@@ -7,6 +7,7 @@ const AddTaskForm = (props) => {
     addTask,
     newTaskTitle,
     setNewTaskTitle,
+    newTaskInputRef,
   } = props
 
   // Браузер при отправке формы перезагружает страницу чтобы этого избежать делаем свой onSubmit c preventDefault чтобы страница не перезагружалась
@@ -30,6 +31,7 @@ const AddTaskForm = (props) => {
           id="new-task"
           value={newTaskTitle}
           onInput={(e) => setNewTaskTitle(e.target.value)}
+          ref={newTaskInputRef}
         />
         <Button
           type="submit"
