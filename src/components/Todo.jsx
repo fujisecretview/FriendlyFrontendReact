@@ -2,7 +2,7 @@ import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import ToDoInfo from "./ToDoInfo";
 import ToDoList from "./ToDoList";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 
 const Todo = () => {
 
@@ -19,6 +19,12 @@ const Todo = () => {
     },
   ]
 
+  // Тут хранится таски которые добавит пользователь
+
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+
   // Тут хранятся таски и начальное значение
 
   const [tasks, setTasks] = useState(() => {
@@ -28,24 +34,22 @@ const Todo = () => {
       return JSON.parse(savedTasks)
     }
 
-    return [{
-      id: 'task-1',
-      title: 'Трахать сук',
-      isDone: false
-    },
-      {
-        id: 'task-2',
-        title: 'Пить сок',
-        isDone: true
-      },
-    ]
+    return initialTasks
   })
 
+  // тут я буду сохранять в локалку
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks])
 
-  // Тут хранится таски которые добавит пользователь
+  const clearSearchQuery = searchQuery.trim().toLowerCase()
+  const filteredTasks = clearSearchQuery.length > 0
+    ? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
+    : null
 
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const newTaskInputRef = useRef(null);
+
+
 
   // Логика работы дочерних компонентов прописывается в родительском
 
@@ -111,16 +115,7 @@ const Todo = () => {
   //   }
   // }, [])
 
-  // тут я буду сохранять в локалку
 
-  useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks])
-
-  const clearSearchQuery = searchQuery.trim().toLowerCase()
-  const filteredTasks = clearSearchQuery.length > 0
-    ? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
-    : null
 
 
   return (
