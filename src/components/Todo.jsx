@@ -2,6 +2,7 @@ import AddTaskForm from "./AddTaskForm";
 import SearchTaskForm from "./SearchTaskForm";
 import ToDoInfo from "./ToDoInfo";
 import ToDoList from "./ToDoList";
+import Button from "./Button";
 import {useEffect, useState, useRef,} from "react";
 
 const Todo = () => {
@@ -18,6 +19,7 @@ const Todo = () => {
       isDone: true
     },
   ]
+
 
   // Тут хранится таски которые добавит пользователь
 
@@ -39,17 +41,17 @@ const Todo = () => {
 
   // тут я буду сохранять в локалку
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('tasks', JSON.stringify(tasks))
   }, [tasks])
 
   useEffect(() => {
     newTaskInputRef.current.focus()
-  })
+  }, [])
 
+  const newTaskInputRef = useRef(null)
 
-
-  const newTaskInputRef = useRef(null);
-
+  const firstIncompleteTaskRef = useRef(null)
+  const firstIncompleteTaskId = tasks.find(({isDone}) => !isDone)?.id
 
 
   // Логика работы дочерних компонентов прописывается в родительском
@@ -103,6 +105,11 @@ const Todo = () => {
     );
   }
 
+  useEffect(() => {
+    console.log(firstIncompleteTaskId)
+  }, [toogleTaskComplete])
+
+
   const filterTasks = (query) => {
     console.log(`Поиск: ${query}`);
   }
@@ -123,8 +130,6 @@ const Todo = () => {
   //     setTasks(JSON.parse(savedTasks));
   //   }
   // }, [])
-
-
 
 
   return (
@@ -150,11 +155,17 @@ const Todo = () => {
         onDeleteAllButtonClick={deleteAllTasks}
       />
 
+      <Button onClick={() => firstIncompleteTaskRef?.current.scrollIntoView({behavior: "smooth"})}>
+        Show first Incomplete Task
+      </Button>
+
       <ToDoList
         tasks={tasks}
         onDeleteTaskButtonClick={deleteTask}
         onTaskCompleteChange={toogleTaskComplete}
         filteredTasks={filteredTasks}
+        firstIncompleteTaskId={firstIncompleteTaskId}
+        firstIncompleteTaskRef={firstIncompleteTaskRef}
       />
     </div>
   )
