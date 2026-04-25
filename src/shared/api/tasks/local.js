@@ -53,10 +53,10 @@ const localAPI = {
     write([]);
   },
 
-  toogleComplete: async (id, isDone) => {
+  toogleComplete: async (id) => {
     const tasks = read().map((e) => {
       if (e.id === id) {
-        return { ...e, isDone: !isDone };
+        return { ...e, isDone: !e.isDone };
       }
       return e;
     });
