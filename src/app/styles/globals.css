@@ -8,6 +8,14 @@ body {
   background-color: var(--color-gray-1);
 }
 
+a,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 input,
 label,
 button {
