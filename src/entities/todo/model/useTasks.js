@@ -133,7 +133,7 @@ const useTasks = () => {
 
   // Удаление всех тасок, optimistic UI logic
   const deleteAllTasks = useCallback(async () => {
-    const isConfirmed = confirm('Wana delete all tasks?');
+    const isConfirmed = confirm('Do you want to delete all tasks?');
 
     if (isConfirmed) {
       const snapshot = tasksRef.current;

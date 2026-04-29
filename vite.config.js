@@ -6,7 +6,7 @@ import path from 'path';
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
   return {
-    base: isProd ? '/FriendlyFrontendReact/' : '/',
+    base: isProd ? '/react-task-manager/' : '/',
     plugins: [react()],
     resolve: {
       alias: {
